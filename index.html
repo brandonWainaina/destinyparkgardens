@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Destiny Park Gardens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F6F1E4;
+    --cream-dim:#EFE8D6;
+    --forest:#24382B;
+    --forest-dim:#2E4535;
+    --sage:#7C9473;
+    --berry:#8C3B4A;
+    --gold:#BFA057;
+    --ink:#1E2419;
+    --line: rgba(30,36,25,0.14);
+    --max: 1100px;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{}
+
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    line-height:1.08;
+    letter-spacing:-0.01em;
+    color:var(--forest);
+  }
+
+  a{color:inherit;}
+
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 28px;}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:#F6F1E4;
+    border-bottom:1px solid var(--line);
+  }
+  nav.wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:16px; padding-bottom:16px;
+  }
+  .brand{
+    font-family:'Fraunces', serif;
+    font-size:1.15rem;
+    font-weight:500;
+    color:var(--forest);
+  }
+  .brand em{font-style:italic; color:var(--berry);}
+  nav ul{display:flex; gap:28px; list-style:none;}
+  nav ul a{
+    font-size:0.92rem; text-decoration:none; color:var(--ink);
+    padding-bottom:2px; border-bottom:1px solid transparent;
+    transition:border-color .2s ease;
+  }
+  nav ul a:hover{border-color:var(--berry);}
+  .nav-cta{
+    display:inline-block; font-size:0.88rem; font-weight:500;
+    padding:9px 18px; background:var(--forest); color:var(--cream);
+    text-decoration:none; border-radius:2px;
+  }
+  .nav-links, .nav-cta{white-space:nowrap;}
+  @media (max-width:760px){ nav ul{display:none;} }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    background:var(--forest);
+    color:var(--cream);
+    overflow:hidden;
+    padding:96px 0 76px;
+  }
+  .hero-pattern{
+    position:absolute; inset:0; opacity:0.5;
+  }
+  .hero .wrap{position:relative; display:grid; grid-template-columns:1.15fr 0.85fr; gap:40px; align-items:end;}
+  .hero-eyebrow{
+    font-size:0.85rem; color:var(--gold); font-weight:500;
+    letter-spacing:0.02em; margin-bottom:18px;
+  }
+  .hero h1{
+    color:var(--cream);
+    font-size:clamp(2.6rem, 5.5vw, 4.4rem);
+    max-width:11ch;
+  }
+  .hero p.lead{
+    margin-top:22px; max-width:42ch; color:rgba(246,241,228,0.82);
+    font-size:1.05rem;
+  }
+  .hero-actions{margin-top:34px; display:flex; gap:16px; flex-wrap:wrap;}
+  .btn{
+    display:inline-block; padding:13px 26px; border-radius:2px;
+    text-decoration:none; font-weight:500; font-size:0.95rem;
+    border:1px solid transparent; transition:transform .15s ease;
+  }
+  .btn-primary{background:var(--berry); color:var(--cream);}
+  .btn-ghost{border-color:rgba(246,241,228,0.5); color:var(--cream);}
+  .btn:hover{transform:translateY(-1px);}
+
+  .hero-figures{
+    align-self:end; display:grid; gap:14px; font-size:0.88rem; color:rgba(246,241,228,0.75);
+    border-left:1px solid rgba(246,241,228,0.28); padding-left:22px;
+  }
+  .hero-figures strong{
+    display:block; font-family:'Fraunces',serif; font-size:1.7rem; color:var(--cream); font-weight:500;
+  }
+  @media (max-width:760px){
+    .hero .wrap{grid-template-columns:1fr;}
+    .hero-figures{border-left:none; padding-left:0; grid-template-columns:1fr 1fr 1fr; border-top:1px solid rgba(246,241,228,0.28); padding-top:20px;}
+  }
+
+  /* ---------- SECTION GENERIC ---------- */
+  section{padding:88px 0;}
+  .section-head{
+    display:grid; grid-template-columns:1fr 1.4fr; gap:40px; margin-bottom:52px;
+  }
+  .section-head h2{font-size:clamp(1.9rem,3.2vw,2.6rem);}
+  .section-head p{color:rgba(30,36,25,0.72); max-width:52ch; align-self:end;}
+  @media (max-width:760px){ .section-head{grid-template-columns:1fr;} }
+
+  /* ---------- ABOUT ---------- */
+  .about{border-bottom:1px solid var(--line);}
+  .about-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;}
+  .about-art{aspect-ratio:4/5; height:420px; border-radius:2px; overflow:hidden;}
+  .about ul{list-style:none; margin-top:24px; display:grid; gap:12px;}
+  .about li{
+    padding-left:20px; position:relative; color:rgba(30,36,25,0.78); font-size:0.97rem;
+  }
+  .about li::before{
+    content:""; position:absolute; left:0; top:9px; width:7px; height:7px;
+    background:var(--sage); border-radius:50%;
+  }
+  @media (max-width:760px){ .about-grid{grid-template-columns:1fr;} }
+
+  /* ---------- POOLS ---------- */
+  .pools{background:var(--cream-dim); border-bottom:1px solid var(--line);}
+  .pool-list{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .pool-card{background:var(--cream-dim); padding:32px 28px;}
+  .pool-card .art{aspect-ratio:16/10; height:200px; margin-bottom:20px; border-radius:1px; overflow:hidden;}
+  .pool-card h3{font-size:1.25rem;}
+  .pool-card p{margin-top:10px; font-size:0.92rem; color:rgba(30,36,25,0.72);}
+  .pool-tag{
+    display:inline-block; margin-top:14px; font-size:0.78rem; color:var(--forest);
+    border:1px solid var(--sage); padding:3px 10px; border-radius:20px;
+  }
+  @media (max-width:760px){ .pool-list{grid-template-columns:1fr;} }
+
+  /* ---------- GARDEN / EVENTS ---------- */
+  .garden{position:relative;}
+  .garden-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;}
+  .garden-art{aspect-ratio:5/4; height:340px; border-radius:2px; overflow:hidden;}
+  .garden-stats{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:30px;}
+  .garden-stats div{border-top:1px solid var(--line); padding-top:12px;}
+  .garden-stats strong{display:block; font-family:'Fraunces',serif; font-size:1.6rem; color:var(--forest); font-weight:500;}
+  .garden-stats span{font-size:0.85rem; color:rgba(30,36,25,0.65);}
+  @media (max-width:760px){ .garden-grid{grid-template-columns:1fr;} }
+
+  /* ---------- BOOKING ---------- */
+  .booking{background:var(--forest); color:var(--cream);}
+  .booking .section-head h2{color:var(--cream);}
+  .booking .section-head p{color:rgba(246,241,228,0.72);}
+  .booking-panel{
+    background:var(--forest-dim); border:1px solid rgba(246,241,228,0.16);
+    padding:40px; border-radius:2px;
+  }
+  form{display:grid; gap:20px; grid-template-columns:1fr 1fr;}
+  .field{display:flex; flex-direction:column; gap:8px;}
+  .field.full{grid-column:1/-1;}
+  label{font-size:0.85rem; color:rgba(246,241,228,0.75);}
+  input, select, textarea{
+    background:rgba(246,241,228,0.06);
+    border:1px solid rgba(246,241,228,0.28);
+    color:var(--cream);
+    padding:12px 14px; font-size:0.95rem; font-family:inherit;
+    border-radius:2px;
+  }
+  input::placeholder, textarea::placeholder{color:rgba(246,241,228,0.4);}
+  select{appearance:none;}
+  textarea{resize:vertical; min-height:96px;}
+  input:focus, select:focus, textarea:focus{
+    outline:none; border-color:var(--gold);
+  }
+  .form-foot{
+    grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;
+  }
+  .form-foot p{font-size:0.82rem; color:rgba(246,241,228,0.55); max-width:38ch;}
+  button.submit{
+    background:var(--gold); color:var(--forest); border:none; cursor:pointer;
+    padding:14px 30px; font-weight:600; font-size:0.95rem; border-radius:2px;
+    font-family:inherit;
+  }
+  button.submit:hover{background:#cbae6e;}
+  @media (max-width:700px){ form{grid-template-columns:1fr;} }
+
+  .confirm{
+    display:none; margin-top:24px; padding:22px 24px; background:rgba(191,160,87,0.12);
+    border:1px solid var(--gold); border-radius:2px; font-size:0.92rem;
+  }
+  .confirm.show{display:block;}
+  .confirm strong{color:var(--gold);}
+  .confirm.error{
+    background:rgba(140,59,74,0.15); border-color:var(--berry);
+  }
+  .confirm.error strong{color:#E08C98;}
+
+  .seating-field{display:none;}
+  .checkbox-label{
+    display:flex; align-items:center; gap:10px; cursor:pointer;
+    font-size:0.9rem; color:rgba(246,241,228,0.85);
+  }
+  .checkbox-label input{width:auto; padding:0; accent-color:var(--gold);}
+
+  .estimate-box{
+    display:none; background:rgba(246,241,228,0.06);
+    border:1px solid rgba(246,241,228,0.18); border-radius:2px;
+    padding:18px 20px;
+  }
+  .estimate-row{
+    display:flex; justify-content:space-between; gap:14px;
+    font-size:0.88rem; color:rgba(246,241,228,0.8); padding:4px 0;
+  }
+  .estimate-row#estSwimRow{display:none;}
+  .estimate-row#estSeatingRow{display:none;}
+  .estimate-total{
+    margin-top:8px; padding-top:10px; border-top:1px solid rgba(246,241,228,0.18);
+    font-weight:600; color:var(--cream); font-size:0.95rem;
+  }
+  .estimate-note{
+    margin-top:10px; font-size:0.78rem; color:rgba(246,241,228,0.55);
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:56px 0 40px; border-top:1px solid var(--line);}
+  .foot-grid{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:32px;}
+  footer h4{font-family:'Fraunces',serif; font-weight:500; margin-bottom:14px; color:var(--forest);}
+  footer p, footer li{font-size:0.9rem; color:rgba(30,36,25,0.68);}
+  footer ul{list-style:none; display:grid; gap:8px;}
+  .foot-bottom{
+    margin-top:40px; padding-top:20px; border-top:1px solid var(--line);
+    font-size:0.8rem; color:rgba(30,36,25,0.5); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  @media (max-width:760px){ .foot-grid{grid-template-columns:1fr;} }
+
+  /* ---------- PHOTOS ---------- */
+  .about-art, .pool-card .art, .garden-art{
+    display:block; width:100%; object-fit:cover;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <div class="brand">Destiny Park <em>Gardens</em></div>
+    <ul>
+      <li><a href="#about">The Hotel</a></li>
+      <li><a href="#pools">Pools</a></li>
+      <li><a href="#garden">Garden &amp; Events</a></li>
+    </ul>
+    <a class="nav-cta" href="#booking">Book your event</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <svg class="hero-pattern" viewBox="0 0 1200 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="poolGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#2E4535"/>
+        <stop offset="100%" stop-color="#24382B"/>
+      </linearGradient>
+    </defs>
+    <rect width="1200" height="600" fill="url(#poolGrad)"/>
+    <g stroke="#7C9473" stroke-opacity="0.35" fill="none" stroke-width="2">
+      <path d="M -50 480 C 150 440, 300 520, 500 470 C 700 420, 850 500, 1250 450"/>
+      <path d="M -50 530 C 180 500, 330 560, 540 520 C 740 480, 880 540, 1250 500"/>
+    </g>
+    <g fill="#BFA057" fill-opacity="0.5">
+      <ellipse cx="1080" cy="120" rx="10" ry="4"/>
+      <ellipse cx="1105" cy="150" rx="8" ry="3"/>
+      <ellipse cx="1055" cy="160" rx="7" ry="3"/>
+      <ellipse cx="140" cy="90" rx="9" ry="4"/>
+      <ellipse cx="170" cy="60" rx="7" ry="3"/>
+    </g>
+  </svg>
+  <div class="wrap">
+    <div>
+      <div class="hero-eyebrow">A garden hotel, built for gathering</div>
+      <h1>Where your celebration takes root.</h1>
+      <p class="lead">Destiny Park Gardens pairs three resort pools with a landscaped event garden — the setting for weddings, receptions and private occasions, just outside the everyday.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#booking">Request your date</a>
+        <a class="btn btn-ghost" href="#garden">See the garden</a>
+      </div>
+    </div>
+    <div class="hero-figures">
+      <div><strong>3</strong> resort pools on site</div>
+      <div><strong>250</strong> guest capacity in the garden</div>
+      <div><strong>1</strong> venue, day and night</div>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <div>
+      <img class="about-art" src="images/hotel-exterior.jpg" alt="Destiny Park Gardens exterior">
+    </div>
+    <div>
+      <h2>A hotel built around water and green space.</h2>
+      <p style="margin-top:18px; color:rgba(30,36,25,0.75); max-width:48ch;">
+        Every guest room looks out over pool or garden. It's a layout we chose on purpose: the pools cool the terraces by day, the garden holds the light in the evening, and the two spaces hand off to each other as the day goes on.
+      </p>
+      <ul>
+        <li>Rooms and suites facing the pools or the garden lawn</li>
+        <li>On-site dining, terrace bar, and event catering</li>
+        <li>Dedicated event coordinator from enquiry to send-off</li>
+        <li>Parking and step-free access throughout the grounds</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="pools" id="pools">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Three pools, three moods.</h2>
+      <p>Guests move between them through the day — quiet water in the morning, family splashing by noon, low light and long shadows by evening.</p>
+    </div>
+  </div>
+  <div class="wrap" style="padding:0 28px;">
+  <div class="pool-list">
+    <div class="pool-card">
+      <img class="art" src="images/pool-horizon.jpg" alt="The Horizon Pool">
+      <h3>The Horizon Pool</h3>
+      <p>An adults' infinity edge facing the tree line, built for slow mornings and long swims.</p>
+      <span class="pool-tag">Adults only</span>
+    </div>
+    <div class="pool-card">
+      <img class="art" src="images/pool-lagoon.jpg" alt="The Lagoon pool">
+      <h3>The Lagoon</h3>
+      <p>The main family pool, with a shallow entry, sun ledge, and poolside food service.</p>
+      <span class="pool-tag">Family</span>
+    </div>
+    <div class="pool-card">
+      <img class="art" src="images/pool-cove.jpg" alt="Cove Pool">
+      <h3>Cove Pool</h3>
+      <p>A shallower, supervised pool with slides, set apart from the quieter areas.</p>
+      <span class="pool-tag">Kids</span>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="garden" id="garden">
+  <div class="wrap garden-grid">
+    <div>
+      <h2>The Meridian Garden.</h2>
+      <p style="margin-top:18px; color:rgba(30,36,25,0.75); max-width:46ch;">
+        A lawn framed by mature trees and a stone pergola, set up for a ceremony by afternoon and a lit reception by night. It's the space guests remember — and the reason most couples book Destiny Park Gardens first.
+      </p>
+      <div class="garden-stats">
+        <div><strong>250</strong><span>seated guests, garden layout</span></div>
+        <div><strong>2</strong><span>ceremony &amp; reception zones</span></div>
+        <div><strong>Dusk</strong><span>string-lit evening setting</span></div>
+        <div><strong>In-house</strong><span>catering &amp; bar service</span></div>
+      </div>
+    </div>
+    <div>
+      <img class="garden-art" src="images/meridian-garden.jpg" alt="The Meridian Garden">
+    </div>
+  </div>
+</section>
+
+<section class="booking" id="booking">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Request your date.</h2>
+      <p>Tell us about the occasion and our event coordinator will follow up within two working days with availability and a proposal.</p>
+    </div>
+    <div class="booking-panel">
+      <form id="bookingForm">
+        <div class="field">
+          <label for="name">Full name</label>
+          <input id="name" name="name" type="text" placeholder="Jane Doe" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="jane@email.com" required>
+        </div>
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input id="phone" name="phone" type="tel" placeholder="+254 700 000 000" required>
+        </div>
+        <div class="field">
+          <label for="eventType">Event type</label>
+          <select id="eventType" name="eventType" required>
+            <option value="" disabled selected>Choose one</option>
+            <option>Wedding</option>
+            <option>Engagement / Introduction</option>
+            <option>Corporate event</option>
+            <option>Birthday celebration</option>
+            <option>Other private event</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="date">Preferred date</label>
+          <input id="date" name="date" type="date" required>
+        </div>
+        <div class="field">
+          <label for="guests">Estimated guests</label>
+          <input id="guests" name="guests" type="number" min="1" placeholder="e.g. 120" required>
+        </div>
+        <div class="field full">
+          <label class="checkbox-label" for="poolAccess">
+            <input type="checkbox" id="poolAccess" name="poolAccess">
+            <span>Event includes pool access (KSh 400/guest)</span>
+          </label>
+        </div>
+        <div class="field full seating-field" id="seatingField">
+          <label class="checkbox-label" for="seating">
+            <input type="checkbox" id="seating" name="seating">
+            <span>Add reserved seating per guest (KSh 300/guest) — optional</span>
+          </label>
+        </div>
+        <div class="field full estimate-box" id="estimateBox">
+          <div class="estimate-row" id="estSwimRow">
+            <span>Pool access — KSh 400 × <span id="estGuests">0</span> guests</span>
+            <span id="estSwim">KSh 0</span>
+          </div>
+          <div class="estimate-row" id="estSeatingRow">
+            <span>Reserved seating — KSh 300 × <span id="estGuests2">0</span> guests</span>
+            <span id="estSeat">KSh 0</span>
+          </div>
+          <div class="estimate-row estimate-total">
+            <span>Estimated total</span>
+            <span id="estTotal">KSh 0</span>
+          </div>
+          <p class="estimate-note">Estimate only — final pricing and accepted payment method are confirmed by our team.</p>
+        </div>
+        <div class="field full">
+          <label for="message">Anything we should know</label>
+          <textarea id="message" name="message" placeholder="Ceremony and reception, timings, any special requests..."></textarea>
+        </div>
+        <div class="form-foot">
+          <p>We'll reach out to confirm availability and pricing within two working days.</p>
+          <button class="submit" type="submit">Request booking</button>
+        </div>
+      </form>
+      <div class="confirm" id="confirmBox"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <div class="brand" style="margin-bottom:14px;">Destiny Park <em>Gardens</em></div>
+      <p style="max-width:34ch;">A pool-and-garden hotel built for both a quiet weekend and a full wedding weekend.</p>
+    </div>
+    <div>
+      <h4>Visit</h4>
+      <ul>
+        <li>Plot 14, Park Gardens Road</li>
+        <li>Open daily, 7am – 11pm</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>events@destinyparkgardens.com</li>
+        <li>+254 700 000 000</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">
+    <span>© 2026 Destiny Park Gardens</span>
+    <span>Replace placeholder text, contact details and artwork with your own.</span>
+  </div>
+</footer>
+
+<script>
+  var form = document.getElementById('bookingForm');
+  var confirmBox = document.getElementById('confirmBox');
+
+  var PRICE_SWIM = 400;   // KSh per guest, always applies
+  var PRICE_SEAT = 300;   // KSh per guest, optional, wedding only
+  var COMMISSION_RATE = 0.15; // your cut of each booking's estimated total — for records only, never shown to the guest
+
+  var guestsInput = document.getElementById('guests');
+  var eventTypeSelect = document.getElementById('eventType');
+  var poolCheckbox = document.getElementById('poolAccess');
+  var seatingField = document.getElementById('seatingField');
+  var seatingCheckbox = document.getElementById('seating');
+  var estimateBox = document.getElementById('estimateBox');
+  var estSwimRow = document.getElementById('estSwimRow');
+  var estSeatingRow = document.getElementById('estSeatingRow');
+
+  function formatKsh(n) {
+    return 'KSh ' + n.toLocaleString('en-KE');
+  }
+
+  function updateEstimate() {
+    var guests = parseInt(guestsInput.value, 10) || 0;
+    var isWedding = eventTypeSelect.value === 'Wedding';
+
+    // Seating add-on only makes sense for weddings; reset it otherwise
+    seatingField.style.display = isWedding ? 'flex' : 'none';
+    if (!isWedding) seatingCheckbox.checked = false;
+
+    var poolOn = poolCheckbox.checked;
+    var seatingOn = isWedding && seatingCheckbox.checked;
+    var swimTotal = poolOn ? guests * PRICE_SWIM : 0;
+    var seatTotal = seatingOn ? guests * PRICE_SEAT : 0;
+    var grandTotal = swimTotal + seatTotal;
+
+    estimateBox.style.display = (guests > 0 && (poolOn || seatingOn)) ? 'block' : 'none';
+    estSwimRow.style.display = poolOn ? 'flex' : 'none';
+    estSeatingRow.style.display = seatingOn ? 'flex' : 'none';
+
+    document.getElementById('estGuests').textContent = guests;
+    document.getElementById('estGuests2').textContent = guests;
+    document.getElementById('estSwim').textContent = formatKsh(swimTotal);
+    document.getElementById('estSeat').textContent = formatKsh(seatTotal);
+    document.getElementById('estTotal').textContent = formatKsh(grandTotal);
+
+    return {
+      guests: guests,
+      isWedding: isWedding,
+      poolOn: poolOn,
+      seatingOn: seatingOn,
+      swimTotal: swimTotal,
+      seatTotal: seatTotal,
+      grandTotal: grandTotal
+    };
+  }
+
+  guestsInput.addEventListener('input', updateEstimate);
+  eventTypeSelect.addEventListener('change', updateEstimate);
+  poolCheckbox.addEventListener('change', updateEstimate);
+  seatingCheckbox.addEventListener('change', updateEstimate);
+
+  var FORMSPREE_ENDPOINT = 'https://formspree.io/f/xaeqbayz';
+  var submitBtn = form.querySelector('button.submit');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var pricing = updateEstimate();
+
+    var data = {
+      name: form.name.value,
+      email: form.email.value,
+      phone: form.phone.value,
+      eventType: form.eventType.value,
+      date: form.date.value,
+      guests: form.guests.value,
+      message: form.message.value,
+      poolAccess: pricing.poolOn ? 'Yes' : 'No',
+      seatingAdded: pricing.seatingOn ? 'Yes' : 'No',
+      estimatedTotal: pricing.grandTotal,
+      yourCommission: Math.round(pricing.grandTotal * COMMISSION_RATE) // 15% of estimated total — record-keeping only, not shown to the guest
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+
+    fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(function (response) {
+        if (!response.ok) { throw new Error('Formspree request failed'); }
+
+        confirmBox.innerHTML =
+          '<strong>Request received.</strong> Thank you, ' + escapeHtml(data.name) + '. ' +
+          'We\'ve noted a ' + escapeHtml(data.eventType || 'event') + ' for ' +
+          escapeHtml(data.date || 'your preferred date') + ' with about ' +
+          escapeHtml(data.guests || '—') + ' guests. ' +
+          (pricing.grandTotal > 0
+            ? 'Estimated charges: ' + formatKsh(pricing.grandTotal) +
+              ' (' + [pricing.poolOn ? 'pool access' : null, pricing.seatingOn ? 'reserved seating' : null]
+                .filter(Boolean).join(' + ') + '). '
+            : '') +
+          'Payment method will be confirmed by our team. Our coordinator will reach you at ' +
+          escapeHtml(data.email) + ' shortly.';
+        confirmBox.classList.remove('error');
+        confirmBox.classList.add('show');
+        form.reset();
+        updateEstimate();
+      })
+      .catch(function () {
+        confirmBox.innerHTML =
+          '<strong>Something went wrong.</strong> Your request wasn\'t sent — please try again, ' +
+          'or contact us directly while we look into it.';
+        confirmBox.classList.add('show', 'error');
+      })
+      .finally(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Request booking';
+      });
+  });
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+</script>
+
+</body>
+</html>

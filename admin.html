@@ -198,10 +198,26 @@
 
   function loadBookings() {
     loadingState.style.display = 'block';
-    db.collection('bookings').orderBy('createdAt', 'desc').get()
-      .then(function (snapshot) {
+    Promise.all([
+      db.collection('bookings').orderBy('createdAt', 'desc').get(),
+      db.collection('commissionLog').get()
+    ])
+      .then(function (results) {
         loadingState.style.display = 'none';
-        renderBookings(snapshot.docs.map(function (doc) { return doc.data(); }));
+
+        var commissionByBooking = {};
+        results[1].forEach(function (doc) {
+          var d = doc.data();
+          commissionByBooking[d.bookingId] = d.commission;
+        });
+
+        var bookings = results[0].docs.map(function (doc) {
+          var b = doc.data();
+          b.commission = commissionByBooking[doc.id] || 0;
+          return b;
+        });
+
+        renderBookings(bookings);
       })
       .catch(function (err) {
         loadingState.style.display = 'none';

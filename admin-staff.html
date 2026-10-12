@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Destiny Park Gardens — Bookings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+  :root{
+    --cream:#F6F1E4; --cream-dim:#EFE8D6; --forest:#24382B; --forest-dim:#2E4535;
+    --sage:#7C9473; --berry:#8C3B4A; --gold:#BFA057; --ink:#1E2419;
+    --line: rgba(246,241,228,0.16);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--forest); color:var(--cream);
+    font-family:'Work Sans', sans-serif; min-height:100vh;
+  }
+  h1,h2{font-family:'Fraunces', serif; font-weight:500;}
+  .wrap{max-width:1100px; margin:0 auto; padding:0 24px;}
+
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 0; border-bottom:1px solid var(--line);
+  }
+  .brand{font-family:'Fraunces',serif; font-size:1.1rem;}
+  .brand em{font-style:italic; color:var(--gold);}
+  #logoutBtn{
+    background:transparent; border:1px solid var(--line); color:var(--cream);
+    padding:8px 16px; border-radius:2px; font-size:0.85rem; cursor:pointer; display:none;
+  }
+
+  /* ---- login ---- */
+  #loginScreen{
+    max-width:360px; margin:90px auto; padding:36px 32px;
+    background:var(--forest-dim); border:1px solid var(--line); border-radius:2px;
+  }
+  #loginScreen h2{font-size:1.5rem; margin-bottom:6px;}
+  #loginScreen p{font-size:0.88rem; color:rgba(246,241,228,0.65); margin-bottom:24px;}
+  #loginScreen label{font-size:0.82rem; color:rgba(246,241,228,0.75); display:block; margin-bottom:6px;}
+  #loginScreen input{
+    width:100%; background:rgba(246,241,228,0.06); border:1px solid var(--line);
+    color:var(--cream); padding:11px 13px; border-radius:2px; font-size:0.95rem;
+    margin-bottom:16px; font-family:inherit;
+  }
+  #loginScreen input:focus{outline:none; border-color:var(--gold);}
+  #loginBtn{
+    width:100%; background:var(--gold); color:var(--forest); border:none;
+    padding:12px; font-weight:600; border-radius:2px; cursor:pointer; font-size:0.95rem;
+  }
+  #loginError{
+    display:none; margin-top:14px; font-size:0.85rem; color:#E08C98;
+  }
+
+  /* ---- dashboard ---- */
+  #dashboard{display:none; padding:40px 0 60px;}
+  .summary{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line); margin-bottom:36px;
+  }
+  .summary .card{background:var(--forest); padding:22px 20px;}
+  .summary .card span{display:block; font-size:0.8rem; color:rgba(246,241,228,0.6); margin-bottom:8px;}
+  .summary .card strong{font-family:'Fraunces',serif; font-size:1.6rem; font-weight:500;}
+  @media (max-width:760px){ .summary{grid-template-columns:1fr;} }
+
+  .table-wrap{overflow-x:auto; border:1px solid var(--line);}
+  table{width:100%; border-collapse:collapse; font-size:0.86rem; min-width:820px;}
+  th, td{text-align:left; padding:12px 16px; white-space:nowrap;}
+  thead th{
+    background:var(--forest-dim); color:rgba(246,241,228,0.6);
+    font-weight:500; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.03em;
+    border-bottom:1px solid var(--line);
+  }
+  tbody tr{border-bottom:1px solid var(--line);}
+  tbody tr:last-child{border-bottom:none;}
+  td.num{text-align:right;}
+  .tag{
+    display:inline-block; font-size:0.74rem; padding:2px 8px; border-radius:20px;
+    border:1px solid var(--sage); color:var(--cream);
+  }
+  .empty-state, .loading-state{
+    padding:60px 20px; text-align:center; color:rgba(246,241,228,0.6);
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="brand">Destiny Park <em>Gardens</em> — Bookings</div>
+    <button id="logoutBtn">Log out</button>
+  </header>
+</div>
+
+<div id="loginScreen">
+  <h2>Staff sign in</h2>
+  <p>Enter your login to view event bookings.</p>
+  <label for="email">Email</label>
+  <input id="email" type="email" autocomplete="username">
+  <label for="password">Password</label>
+  <input id="password" type="password" autocomplete="current-password">
+  <button id="loginBtn">Sign in</button>
+  <p id="loginError">Sign-in failed. Check your email and password.</p>
+</div>
+
+<div id="dashboard" class="wrap">
+  <div class="summary" id="summary">
+    <div class="card"><span>Total bookings</span><strong id="sCount">0</strong></div>
+    <div class="card"><span>Total guests</span><strong id="sGuests">0</strong></div>
+    <div class="card"><span>Estimated revenue</span><strong id="sRevenue">KSh 0</strong></div>
+  </div>
+
+  <div class="table-wrap">
+    <table id="bookingsTable">
+      <thead>
+        <tr>
+          <th>Date booked</th>
+          <th>Guest</th>
+          <th>Contact</th>
+          <th>Event</th>
+          <th>Event date</th>
+          <th class="num">Guests</th>
+          <th>Pool</th>
+          <th>Seating</th>
+          <th class="num">Total</th>
+        </tr>
+      </thead>
+      <tbody id="bookingsBody"></tbody>
+    </table>
+  </div>
+  <div id="emptyState" class="empty-state" style="display:none;">No bookings yet.</div>
+</div>
+
+<div id="loadingState" class="loading-state" style="display:none;">Loading...</div>
+
+<script>
+  // Same project as index.html / admin.html
+  var firebaseConfig = {
+    apiKey: "AIzaSyDhnTcy-FKmTjObFnRk2eaqDS593LxKzis",
+    authDomain: "destiny-park-gardens.firebaseapp.com",
+    projectId: "destiny-park-gardens",
+    storageBucket: "destiny-park-gardens.firebasestorage.app",
+    messagingSenderId: "734731180190",
+    appId: "1:734731180190:web:a91b4ef384cb9e6d09038f"
+  };
+  firebase.initializeApp(firebaseConfig);
+
+  var auth = firebase.auth();
+  var db = firebase.firestore();
+
+  var loginScreen = document.getElementById('loginScreen');
+  var dashboard = document.getElementById('dashboard');
+  var logoutBtn = document.getElementById('logoutBtn');
+  var loginBtn = document.getElementById('loginBtn');
+  var loginError = document.getElementById('loginError');
+  var loadingState = document.getElementById('loadingState');
+
+  loginBtn.addEventListener('click', function () {
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+    loginError.style.display = 'none';
+    auth.signInWithEmailAndPassword(email, password).catch(function () {
+      loginError.style.display = 'block';
+    });
+  });
+
+  logoutBtn.addEventListener('click', function () {
+    auth.signOut();
+  });
+
+  auth.onAuthStateChanged(function (user) {
+    if (user) {
+      loginScreen.style.display = 'none';
+      logoutBtn.style.display = 'inline-block';
+      dashboard.style.display = 'block';
+      loadBookings();
+    } else {
+      loginScreen.style.display = 'block';
+      logoutBtn.style.display = 'none';
+      dashboard.style.display = 'none';
+    }
+  });
+
+  function formatKsh(n) {
+    return 'KSh ' + Math.round(n || 0).toLocaleString('en-KE');
+  }
+
+  function escapeHtml(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // NOTE: this page never queries the commissionLog collection — it doesn't
+  // need to, and Firestore rules would block it for a staff login anyway.
+  function loadBookings() {
+    loadingState.style.display = 'block';
+    db.collection('bookings').orderBy('createdAt', 'desc').get()
+      .then(function (snapshot) {
+        loadingState.style.display = 'none';
+        renderBookings(snapshot.docs.map(function (doc) { return doc.data(); }));
+      })
+      .catch(function (err) {
+        loadingState.style.display = 'none';
+        loadingState.textContent = 'Could not load bookings: ' + err.message;
+        loadingState.style.display = 'block';
+      });
+  }
+
+  function renderBookings(bookings) {
+    var tbody = document.getElementById('bookingsBody');
+    var emptyState = document.getElementById('emptyState');
+    tbody.innerHTML = '';
+
+    if (!bookings.length) {
+      emptyState.style.display = 'block';
+    } else {
+      emptyState.style.display = 'none';
+    }
+
+    var totalGuests = 0, totalRevenue = 0;
+
+    bookings.forEach(function (b) {
+      totalGuests += b.guests || 0;
+      totalRevenue += b.estimatedTotal || 0;
+
+      var bookedAt = b.createdAt && b.createdAt.toDate ? b.createdAt.toDate().toLocaleDateString('en-KE') : '—';
+
+      var row = document.createElement('tr');
+      row.innerHTML =
+        '<td>' + escapeHtml(bookedAt) + '</td>' +
+        '<td>' + escapeHtml(b.name) + '</td>' +
+        '<td>' + escapeHtml(b.email) + '<br><span style="opacity:.6">' + escapeHtml(b.phone) + '</span></td>' +
+        '<td>' + escapeHtml(b.eventType) + '</td>' +
+        '<td>' + escapeHtml(b.date) + '</td>' +
+        '<td class="num">' + (b.guests || 0) + '</td>' +
+        '<td>' + (b.poolAccess ? '<span class="tag">Yes</span>' : '—') + '</td>' +
+        '<td>' + (b.seatingAdded ? '<span class="tag">Yes</span>' : '—') + '</td>' +
+        '<td class="num">' + formatKsh(b.estimatedTotal) + '</td>';
+      tbody.appendChild(row);
+    });
+
+    document.getElementById('sCount').textContent = bookings.length;
+    document.getElementById('sGuests').textContent = totalGuests.toLocaleString('en-KE');
+    document.getElementById('sRevenue').textContent = formatKsh(totalRevenue);
+  }
+</script>
+
+</body>
+</html>

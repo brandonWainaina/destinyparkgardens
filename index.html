@@ -577,7 +577,12 @@
 
   function saveToDashboard(data, pricing) {
     if (!window.firebase || !firebase.apps || !firebase.apps.length) return;
-    firebase.firestore().collection('bookings').add({
+    var db = firebase.firestore();
+
+    // Bookings collection — readable by anyone with an admin login (you or hotel staff).
+    // Deliberately holds NO commission figure.
+    var bookingRef = db.collection('bookings').doc();
+    bookingRef.set({
       name: data.name,
       email: data.email,
       phone: data.phone,
@@ -588,10 +593,18 @@
       poolAccess: pricing.poolOn,
       seatingAdded: pricing.seatingOn,
       estimatedTotal: pricing.grandTotal,
-      commission: Math.round(pricing.grandTotal * COMMISSION_RATE),
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     }).catch(function (err) {
       console.error('Could not save booking to dashboard', err);
+    });
+
+    // Commission log — a separate collection, locked to your account only via Firestore rules.
+    db.collection('commissionLog').add({
+      bookingId: bookingRef.id,
+      commission: Math.round(pricing.grandTotal * COMMISSION_RATE),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(function (err) {
+      console.error('Could not save commission record', err);
     });
   }
 

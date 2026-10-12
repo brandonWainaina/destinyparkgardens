@@ -165,8 +165,10 @@
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
     loginError.style.display = 'none';
-    auth.signInWithEmailAndPassword(email, password).catch(function () {
+    auth.signInWithEmailAndPassword(email, password).catch(function (err) {
+      loginError.textContent = 'Sign-in failed: ' + err.code + ' — ' + err.message;
       loginError.style.display = 'block';
+      console.error('Auth error', err);
     });
   });
 

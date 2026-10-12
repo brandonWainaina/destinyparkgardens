@@ -198,10 +198,18 @@
 
   function loadBookings() {
     loadingState.style.display = 'block';
-    Promise.all([
-      db.collection('bookings').orderBy('createdAt', 'desc').get(),
-      db.collection('commissionLog').get()
-    ])
+
+    var bookingsPromise = db.collection('bookings').orderBy('createdAt', 'desc').get()
+      .catch(function (err) {
+        throw new Error('bookings: ' + err.message);
+      });
+
+    var commissionPromise = db.collection('commissionLog').get()
+      .catch(function (err) {
+        throw new Error('commissionLog: ' + err.message);
+      });
+
+    Promise.all([bookingsPromise, commissionPromise])
       .then(function (results) {
         loadingState.style.display = 'none';
 
@@ -221,7 +229,7 @@
       })
       .catch(function (err) {
         loadingState.style.display = 'none';
-        loadingState.textContent = 'Could not load bookings: ' + err.message;
+        loadingState.textContent = 'Could not load: ' + err.message;
         loadingState.style.display = 'block';
       });
   }

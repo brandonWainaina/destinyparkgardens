@@ -261,6 +261,8 @@
     display:block; width:100%; object-fit:cover;
   }
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -557,6 +559,42 @@
   var FORMSPREE_ENDPOINT = 'https://formspree.io/f/xaeqbayz';
   var submitBtn = form.querySelector('button.submit');
 
+  // ---- Firebase (powers the admin dashboard) ----
+  // Replace these placeholder values with your real config from the Firebase console.
+  var firebaseConfig = {
+    apiKey: "AIzaSyDhnTcy-FKmTjObFnRk2eaqDS593LxKzis",
+    authDomain: "destiny-park-gardens.firebaseapp.com",
+    projectId: "destiny-park-gardens",
+    storageBucket: "destiny-park-gardens.firebasestorage.app",
+    messagingSenderId: "734731180190",
+    appId: "1:734731180190:web:a91b4ef384cb9e6d09038f"
+  };
+  try {
+    firebase.initializeApp(firebaseConfig);
+  } catch (err) {
+    console.error('Firebase init failed — admin dashboard will have no data until this is fixed.', err);
+  }
+
+  function saveToDashboard(data, pricing) {
+    if (!window.firebase || !firebase.apps || !firebase.apps.length) return;
+    firebase.firestore().collection('bookings').add({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      eventType: data.eventType,
+      date: data.date,
+      guests: Number(data.guests) || 0,
+      message: data.message,
+      poolAccess: pricing.poolOn,
+      seatingAdded: pricing.seatingOn,
+      estimatedTotal: pricing.grandTotal,
+      commission: Math.round(pricing.grandTotal * COMMISSION_RATE),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(function (err) {
+      console.error('Could not save booking to dashboard', err);
+    });
+  }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -578,6 +616,8 @@
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending...';
+
+    saveToDashboard(data, pricing);
 
     fetch(FORMSPREE_ENDPOINT, {
       method: 'POST',
